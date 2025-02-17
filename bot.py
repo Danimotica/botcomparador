@@ -3,7 +3,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 import os
 from flask import Flask, request
 # from telegram import Bot
-f# rom telegram.ext import Dispatcher
+# from telegram.ext import Dispatcher
 
 # Crea la aplicación Flask
 app = Flask(__name__)
