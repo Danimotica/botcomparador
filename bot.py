@@ -1,7 +1,11 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
-TOKEN = "7836540058:AAEkLhgAV8PYl5nWHFBYstxxoXhXImYda3o"
+# Configura el webhook con la URL del servidor
+webhook_url = "https://botcomparadortelegram.onrender.com/7836540058:AAEkLhgAV8PYl5nWHFBYstxxoXhXImYda3o"
+  # Asegúrate de reemplazar <tu_dominio> con tu URL
+bot.setWebhook(url=webhook_url)
+
 
 
 # Diccionario con precios de ejemplo (actualiza con datos reales)
@@ -89,14 +93,40 @@ if __name__ == "__main__":
 
 import os
 from flask import Flask
+from telegram import Bot
+from telegram.ext import Dispatcher, CommandHandler, MessageHandler, Filters
 
-app = Flask(__name__)  
+# Crea la aplicación Flask
+app = Flask(__name__)
+
+# El token de tu bot
+TOKEN = "7836540058:AAEkLhgAV8PYl5nWHFBYstxxoXhXImYda3o"
+bot = Bot(token=TOKEN)
+
+# Configura el dispatcher
+dispatcher = Dispatcher(bot, update_queue=None)
+
+# Maneja los comandos y mensajes
+def start(update, context):
+    update.message.reply_text("¡Hola! Soy tu asesor de Tu Ahorro Claro.")
+
+def handle_message(update, context):
+    update.message.reply_text("Gracias por tu mensaje.")
+
+dispatcher.add_handler(CommandHandler("start", start))
+dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
 
 @app.route('/')
 def home():
     return 'Bot está en funcionamiento'
 
+@app.route(f'/{TOKEN}', methods=['POST'])
+def webhook():
+    json_str = request.get_data(as_text=True)
+    update = Update.de_json(json_str, bot)
+    dispatcher.process_update(update)
+    return '', 200
+
 if __name__ == "__main__":
     # Aquí se asegura de que el bot escuche en el puerto correcto, asignado por Render.
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))  # Usando el puerto proporcionado por Render o el 5000 si no está configurado
-
