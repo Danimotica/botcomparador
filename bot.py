@@ -1,3 +1,4 @@
+import json  # ✅ IMPORTAR JSON
 from telegram import Bot, Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 import os
