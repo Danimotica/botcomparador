@@ -14,7 +14,7 @@ TOKEN = "7836540058:AAEkLhgAV8PYl5nWHFBYstxxoXhXImYda3o"
 bot = Bot(token=TOKEN)
 
 # Configura el dispatcher
- dispatcher = Dispatcher(bot, None, workers=0)
+dispatcher = Dispatcher(bot, None, workers=0)
 
 # Diccionario con tarifas (ejemplo)
 TARIFAS = {
@@ -65,7 +65,7 @@ USER_DATA = {}
         del USER_DATA[chat_id]
         del context.user_data["step"]
 
-def calcular_factura(datos, tarifa):
+ def calcular_factura(datos, tarifa):
     kw_contratados = datos["kw_contratados"]
     kw_consumidos = datos["kw_consumidos"]
 
