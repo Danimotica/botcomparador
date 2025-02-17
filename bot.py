@@ -34,7 +34,7 @@ USER_DATA = {}
     USER_DATA[chat_id] = {}
 
      update.message.reply_text("Introduce los kW contratados (ejemplo: 3.45):")
-    context.user_data["step"] = "kw_contratados"
+     context.user_data["step"] = "kw_contratados"
 
  def handle_message(update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
