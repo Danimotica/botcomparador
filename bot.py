@@ -86,6 +86,8 @@ def home():
 @app.route(f'/{TOKEN}', methods=['POST'])
 def webhook():
     json_str = request.get_data(as_text=True)
+    json_obj = json.loads(json_str)  # Convertir el string a un diccionario
+
     update = Update.de_json(json_str, bot)
     dispatcher.process_update(update)
     return '', 200
