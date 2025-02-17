@@ -86,3 +86,17 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+import os
+from flask import Flask
+
+app = Flask(__name__)  
+
+@app.route('/')
+def home():
+    return 'Bot está en funcionamiento'
+
+if __name__ == "__main__":
+    # Aquí se asegura de que el bot escuche en el puerto correcto, asignado por Render.
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))  # Usando el puerto proporcionado por Render o el 5000 si no está configurado
+
