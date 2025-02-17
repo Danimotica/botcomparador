@@ -1,4 +1,4 @@
-from telegram import Update
+from telegram import Bot, Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 import os
 from flask import Flask, request
