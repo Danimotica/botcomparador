@@ -87,12 +87,17 @@ def home():
 @app.route(f'/{TOKEN}', methods=['POST'])
 def webhook():
     json_str = request.get_data(as_text=True)
-    json_obj = json.loads(json_str)  # Convertir el string a un diccionario
+    json_obj = json.loads(json_str)  # Convertir string JSON a diccionario
 
-    update = Update.de_json(json_str, bot)
+    print("JSON recibido:", json_obj)  # 🔍 Ver qué datos está recibiendo
+
+    if not isinstance(json_obj, dict):
+        print("⚠️ ERROR: El JSON recibido no es un diccionario")
+        return "Invalid JSON format", 400
+
+    update = Update.de_json(json_obj, bot)
     dispatcher.process_update(update)
     return '', 200
-
 def main():
     # Configura el webhook con la URL de tu servidor
     webhook_url = f"https://botcomparadortelegram.onrender.com/{TOKEN}"
