@@ -4,7 +4,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 import os
 from flask import Flask, request
 # from telegram import Bot
-# from telegram.ext import Dispatcher
+ from telegram.ext import Dispatche, Update
 
 # Crea la aplicación Flask
 app = Flask(__name__)
@@ -14,7 +14,7 @@ TOKEN = "7836540058:AAEkLhgAV8PYl5nWHFBYstxxoXhXImYda3o"
 bot = Bot(token=TOKEN)
 
 # Configura el dispatcher
-# dispatcher = Dispatcher(bot, update_queue=None)
+ dispatcher = Dispatcher(bot, None, workers=0)
 
 # Diccionario con tarifas (ejemplo)
 TARIFAS = {
@@ -26,17 +26,17 @@ TARIFAS = {
 
 USER_DATA = {}
 
-async def start(update: Update, context: CallbackContext) -> None:
-    await update.message.reply_text("¡Hola! Soy tu asesor de Tu Ahorro Claro. ¿Quieres saber cuánto puedes ahorrar en tu factura de luz?\n\nUsa /calcular para obtener una estimación de tu factura.")
+ def start(update: Update, context: CallbackContext) -> None:
+     update.message.reply_text("¡Hola! Soy tu asesor de Tu Ahorro Claro. ¿Quieres saber cuánto puedes ahorrar en tu factura de luz?\n\nUsa /calcular para obtener una estimación de tu factura.")
 
-async def calcular(update: Update, context: CallbackContext) -> None:
+ def calcular(update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
     USER_DATA[chat_id] = {}
 
-    await update.message.reply_text("Introduce los kW contratados (ejemplo: 3.45):")
+     update.message.reply_text("Introduce los kW contratados (ejemplo: 3.45):")
     context.user_data["step"] = "kw_contratados"
 
-async def handle_message(update: Update, context: CallbackContext) -> None:
+ def handle_message(update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
     user_input = update.message.text
 
@@ -59,7 +59,7 @@ async def handle_message(update: Update, context: CallbackContext) -> None:
             total_factura = calcular_factura(USER_DATA[chat_id], datos)
             mensaje += f"🔹 {compania}: {total_factura:.2f} €\n"
 
-        await update.message.reply_text(mensaje)
+         update.message.reply_text(mensaje)
 
         # Limpiar datos del usuario
         del USER_DATA[chat_id]
@@ -101,7 +101,7 @@ def webhook():
 def main():
     # Configura el webhook con la URL de tu servidor
     webhook_url = f"https://botcomparadortelegram.onrender.com/{TOKEN}"
-    bot.set_webhook(url=webhook_url)
+    
 
     # Configura el bot
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))  # Usando el puerto proporcionado por Render
