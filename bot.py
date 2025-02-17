@@ -2,8 +2,8 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 import os
 from flask import Flask, request
-from telegram import Bot
-from telegram.ext import Dispatcher
+# from telegram import Bot
+f# rom telegram.ext import Dispatcher
 
 # Crea la aplicación Flask
 app = Flask(__name__)
@@ -13,7 +13,7 @@ TOKEN = "7836540058:AAEkLhgAV8PYl5nWHFBYstxxoXhXImYda3o"
 bot = Bot(token=TOKEN)
 
 # Configura el dispatcher
-dispatcher = Dispatcher(bot, update_queue=None)
+# dispatcher = Dispatcher(bot, update_queue=None)
 
 # Diccionario con tarifas (ejemplo)
 TARIFAS = {
