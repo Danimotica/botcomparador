@@ -1,26 +1,27 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+import os
+from flask import Flask, request
+from telegram import Bot
+from telegram.ext import Dispatcher
 
-# Configura el webhook con la URL del servidor
-webhook_url = "https://botcomparadortelegram.onrender.com/7836540058:AAEkLhgAV8PYl5nWHFBYstxxoXhXImYda3o"
-  # Asegúrate de reemplazar <tu_dominio> con tu URL
-bot.setWebhook(url=webhook_url)
+# Crea la aplicación Flask
+app = Flask(__name__)
 
+# El token de tu bot
+TOKEN = "7836540058:AAEkLhgAV8PYl5nWHFBYstxxoXhXImYda3o"
+bot = Bot(token=TOKEN)
 
+# Configura el dispatcher
+dispatcher = Dispatcher(bot, update_queue=None)
 
-# Diccionario con precios de ejemplo (actualiza con datos reales)
+# Diccionario con tarifas (ejemplo)
 TARIFAS = {
     "Compañia 1": {"potenciapunta": 0.11, "potenciavalle": 0.04, "energia": 0.12, "alquiler_contador": 0.80, "bono_social": 0.39},
     "Compañia 2": {"potenciapunta": 0.094, "potenciavalle": 0.0465, "energia": 0.128, "alquiler_contador": 0.80, "bono_social": 0.39},
     "Compañia 3": {"potenciapunta": 0.108, "potenciavalle": 0.033, "energia": 0.119, "alquiler_contador": 0.80, "bono_social": 0.39},
     "Compañia 4": {"potenciapunta": 0.068, "potenciavalle": 0.068, "energia": 0.129, "alquiler_contador": 0.80, "bono_social": 0.39}
 }
-
-# Los comentarios sobre las compañías pueden ir fuera del diccionario
-# compania 1 endesa
-# compania 2 iberdrola
-# compania 3 naturgy
-# compania 4 repsol
 
 USER_DATA = {}
 
@@ -78,44 +79,6 @@ def calcular_factura(datos, tarifa):
     total = termino_potencia_punta + termino_potencia_valle + termino_energia + alquiler_contador + bono_social + impuestos + iva
     return total
 
-def main():
-    app = Application.builder().token(TOKEN).build()
-
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("calcular", calcular))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
-    print("Bot iniciado...")
-   #  app.run_polling()
-
-if __name__ == "__main__":
-    main()
-
-import os
-from flask import Flask
-from telegram import Bot
-from telegram.ext import Dispatcher, CommandHandler, MessageHandler, Filters
-
-# Crea la aplicación Flask
-app = Flask(__name__)
-
-# El token de tu bot
-TOKEN = "7836540058:AAEkLhgAV8PYl5nWHFBYstxxoXhXImYda3o"
-bot = Bot(token=TOKEN)
-
-# Configura el dispatcher
-dispatcher = Dispatcher(bot, update_queue=None)
-
-# Maneja los comandos y mensajes
-def start(update, context):
-    update.message.reply_text("¡Hola! Soy tu asesor de Tu Ahorro Claro.")
-
-def handle_message(update, context):
-    update.message.reply_text("Gracias por tu mensaje.")
-
-dispatcher.add_handler(CommandHandler("start", start))
-dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
-
 @app.route('/')
 def home():
     return 'Bot está en funcionamiento'
@@ -127,6 +90,13 @@ def webhook():
     dispatcher.process_update(update)
     return '', 200
 
+def main():
+    # Configura el webhook con la URL de tu servidor
+    webhook_url = f"https://botcomparadortelegram.onrender.com/{TOKEN}"
+    bot.set_webhook(url=webhook_url)
+
+    # Configura el bot
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))  # Usando el puerto proporcionado por Render
+
 if __name__ == "__main__":
-    # Aquí se asegura de que el bot escuche en el puerto correcto, asignado por Render.
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))  # Usando el puerto proporcionado por Render o el 5000 si no está configurado
+    main()
